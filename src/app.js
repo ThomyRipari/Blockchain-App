@@ -56,6 +56,13 @@ App = {
 		App.todoList = await App.contracts.TodoList.deployed();
 	},
 
+	createTask: async () => {
+		App.setLoading(true)
+		const content = $("#newTask").val();
+		await App.todoList.createTask(content);
+		window.location.reload();
+	},
+
 	render: async () => {
 		if (App.loading) {
 			return;
@@ -86,8 +93,6 @@ App = {
 
 			newTaskTemplate.find('.content').html(taskContent);
 			newTaskTemplate.find('input').prop('name', taskId).prop('checked', taskCompleted)
-
-			console.log(newTaskTemplate);
 
 			if (taskCompleted) {
 				$("#completedTaskList").append(newTaskTemplate);
