@@ -65,14 +65,39 @@ App = {
 
 		$("#account").html(App.account);
 
+		await App.renderTasks();
+
 		App.setLoading(false);
 
 	},
 
-	/*renderTasks: async () => {
+	renderTasks: async () => {
 		const taskCount = await App.todoList.taskCount();
-		console.log(taskCount);
-	},*/
+		const taskTemplate = $('.taskTemplate');
+
+		for (var i = 1; i <= taskCount; i++) {
+			const task = await App.todoList.tasks(i);
+
+			const taskId = task[0].toNumber();
+			const taskContent = task[1];
+			const taskCompleted = task[2];
+
+			const newTaskTemplate = taskTemplate.clone();
+
+			newTaskTemplate.find('.content').html(taskContent);
+			newTaskTemplate.find('input').prop('name', taskId).prop('checked', taskCompleted)
+
+			console.log(newTaskTemplate);
+
+			if (taskCompleted) {
+				$("#completedTaskList").append(newTaskTemplate);
+			} else {
+				$("#taskList").append(newTaskTemplate);
+			}
+
+			newTaskTemplate.show();
+		}
+	},
 
 	setLoading: (isLoading) => {
 		App.loading = isLoading;
